@@ -8,4 +8,3 @@ Real Estate
     :alt: License: LGPL-3
 
 |badge1|
-
