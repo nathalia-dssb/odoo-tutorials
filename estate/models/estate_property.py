@@ -3,7 +3,7 @@ from odoo import fields, models
 
 class EstateProperty(models.Model):
     _name = "estate.property"
-    _description = "Real estate properties."
+    _description = "Estate property."
 
     name = fields.Char(required=True, string="Title")
     description = fields.Text()
@@ -38,3 +38,8 @@ class EstateProperty(models.Model):
         default="new",
     )
     active = fields.Boolean(default=True)
+    property_type_id = fields.Many2one("estate.property.type")
+    buyer = fields.Many2one("res.partner", copy=False)
+    salesperson = fields.Many2one("res.users", default=lambda self: self.env.uid)
+    tag_ids = fields.Many2many("estate.property.tag", string="Tags")
+    offer_ids = fields.One2many("estate.property.offer", "property_id", string="Offers")
