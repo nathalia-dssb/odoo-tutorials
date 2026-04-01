@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class EstatePropertyOffer(models.Model):
@@ -21,15 +22,40 @@ class EstatePropertyOffer(models.Model):
     @api.depends("create_date", "validity")
     def _compute_date_deadline(self):
         for record in self:
-            if record.create_date:
-                record.date_deadline = fields.Date.add(record.create_date, days=record.validity or 0)
-            else:
-                record.date_deadline = False
+            date = record.create_date or fields.Date.today()
+            record.date_deadline = fields.Date.add(date, days=record.validity or 0)
 
     def _inverse_date_deadline(self):
         for record in self:
             if record.create_date and record.date_deadline:
                 delta = record.date_deadline - record.create_date.date()
                 record.validity = delta.days
-            elif record.date_deadline:
-                record.validity = 7
+
+    def action_accept(self):
+        for record in self:
+            # Checks if another offer has already been accepted for this property,
+            # in this case scenario it's asumed that only one offer can be accepted
+            # and once it has been accepted, no other offers should be accepted
+            accepted_offer = record.property_id.offer_ids.filtered(lambda o: o.status == "accepted")
+            if accepted_offer:
+                raise UserError("An offer for this property has already been accepted.")
+
+            # If an offer it's accepted, all others should be refused
+            other_offers = record.property_id.offer_ids.filtered(lambda o: o.id != record.id)
+            other_offers.write({"status": "refused"})
+
+            # Finally the changes to the record will be done if valitaions passed correctly
+            record.property_id.write(
+                {
+                    "buyer": record.partner_id.id,
+                    "selling_price": record.price,
+                    "state": "offer_accepted",
+                }
+            )
+            record.status = "accepted"
+
+    def action_refuse(self):
+        for record in self:
+            if record.status == "refused":
+                raise UserError("This offer is already refused.")
+            record.status = "refused"
