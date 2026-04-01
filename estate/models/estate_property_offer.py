@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
     _description = "Estate property offer."
+    _order = "price desc"
 
     _positive_offer_price = models.Constraint(
         "CHECK(price > 0)", "Offer price must be strictly positive and greater than 0."
@@ -21,6 +22,7 @@ class EstatePropertyOffer(models.Model):
     partner_id = fields.Many2one("res.partner", required=True)
     property_id = fields.Many2one("estate.property", required=True)
     validity = fields.Integer(default=7, string="Validity (days)")
+    property_type_id = fields.Many2one(related="property_id.property_type_id", store=True)
     date_deadline = fields.Date(compute="_compute_date_deadline", inverse="_inverse_date_deadline")
 
     @api.depends("create_date", "validity")
