@@ -153,3 +153,4 @@
         <field name="context">{'search_default_available': 1}</field>
     </record>
 </odoo>
+

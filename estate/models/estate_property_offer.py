@@ -37,6 +37,22 @@ class EstatePropertyOffer(models.Model):
                 delta = record.date_deadline - record.create_date.date()
                 record.validity = delta.days
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            property_id = vals.get("property_id")
+            if property_id:
+                prop = self.env["estate.property"].browse(property_id)
+                max_existing = max(prop.offer_ids.mapped("price"), default=0.0)
+                if vals.get("price", 0) < max_existing:
+                    raise UserError(
+                        ("Offer amount cannot be lower than existing offer of $%(max)s.")
+                        % {"max": max_existing}
+                    )
+                property_id.state = "offer_received"
+                
+        return super().create(vals_list)
+
     def action_accept(self):
         for record in self:
             # Checks if another offer has already been accepted for this property,
