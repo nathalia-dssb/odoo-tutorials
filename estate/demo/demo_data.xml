@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="estate_property_big_villa" model="estate.property">
+            <field name="name">Big Villa</field>
+            <field name="state">new</field>
+            <field name="description">A nice and big villa</field>
+            <field name="postcode">12345</field>
+            <field name="date_availability">2020-02-02</field>
+            <field name="expected_price">1600000</field>
+            <field name="bedrooms">6</field>
+            <field name="living_area">100</field>
+            <field name="property_type_id" ref="estate.property_type_residential" />
+            <field name="facades">4</field>
+            <field name="garage" eval="True" />
+            <field name="garden" eval="True" />
+            <field name="garden_area">100000</field>
+            <field name="garden_orientation">south</field>
+        </record>
+
+        <record id="estate_property_trailer_home" model="estate.property">
+            <field name="name">Trailer home</field>
+            <field name="state">cancelled</field>
+            <field name="description">Home in a trailer park</field>
+            <field name="postcode">54321</field>
+            <field name="date_availability">1970-01-01</field>
+            <field name="expected_price">100000</field>
+            <field name="selling_price">120000</field>
+            <field name="bedrooms">1</field>
+            <field name="living_area">10</field>
+            <field name="property_type_id" ref="estate.property_type_residential" />
+            <field name="facades">4</field>
+            <field name="garage" eval="False" />
+        </record>
+
+        <record id="offer_1_big_villa" model="estate.property.offer">
+            <field name="partner_id" ref="base.res_partner_address_4" />
+            <field name="property_id" ref="estate_property_big_villa" />
+            <field name="price">10000</field>
+            <field name="validity">14</field>
+        </record>
+
+        <record id="offer_2_big_villa" model="estate.property.offer">
+            <field name="partner_id" ref="base.res_partner_address_4" />
+            <field name="property_id" ref="estate_property_big_villa" />
+            <field name="price">1500000</field>
+            <field name="validity">14</field>
+            <field name="date_deadline"
+                eval="(datetime.now() + relativedelta(days=14)).strftime('%Y-%m-%d')" />
+        </record>
+
+        <record id="offer_3_big_villa" model="estate.property.offer">
+            <field name="partner_id" ref="base.res_partner_address_3" />
+            <field name="property_id" ref="estate_property_big_villa" />
+            <field name="price">1500001</field>
+            <field name="validity">14</field>
+            <field name="date_deadline"
+                eval="(datetime.now() + relativedelta(days=14)).strftime('%Y-%m-%d')" />
+        </record>
+
+        <record id="estate_property_modern_apartment" model="estate.property">
+            <field name="name">Modern Apartment</field>
+            <field name="state">offer_received</field>
+            <field name="description">Stylish apartment in the city center</field>
+            <field name="postcode">98765</field>
+            <field name="expected_price">250000</field>
+            <field name="bedrooms">2</field>
+            <field name="living_area">75</field>
+            <field name="property_type_id" ref="estate.property_type_residential" />
+            <field name="facades">1</field>
+            <field name="garage" eval="True" />
+            <field name="garden" eval="False" />
+            <field name="offer_ids"
+                eval="[
+                      Command.create({
+                          'partner_id': ref('base.res_partner_main2'),
+                          'price': 240000,
+                          'validity': 10,
+                      }),
+                      Command.create({
+                          'partner_id': ref('base.res_partner_address_3'),
+                          'price': 250000,
+                          'validity': 14,
+                      }),
+                  ]" />
+        </record>
+
+        <function model="estate.property.offer" name="action_refuse">
+            <value eval="[ref('offer_1_big_villa'), ref('offer_2_big_villa')]" />
+        </function>
+        <function model="estate.property.offer" name="action_accept">
+            <value eval="[ref('offer_3_big_villa')]" />
+        </function>
+
+    </data>
+</odoo>
