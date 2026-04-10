@@ -1,12 +1,19 @@
+import logging
+
 from odoo import models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
+
+_logger = logging.getLogger(__name__)
 
 
 class EstateProperty(models.Model):
     _inherit = "estate.property"
 
     def action_sold(self):
+        self.check_access('write')
+        _logger.info(" reached ".center(100, '='))
+
         super().action_sold()
 
         journal = self.env["account.journal"].search(

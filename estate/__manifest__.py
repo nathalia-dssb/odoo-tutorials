@@ -4,10 +4,11 @@
     "author": "Vauxoo",
     "license": "LGPL-3",
     "website": "https://www.vauxoo.com/",
-    "category": "Customizations",
+    "category": "Real Estate/Brokerage",
     "version": "19.0.1.0.0",
     "depends": ["base"],
     "data": [
+        "security/security.xml",
         "security/ir.model.access.csv",
         "views/estate_property_offer_views.xml",
         "views/estate_property_type_views.xml",
