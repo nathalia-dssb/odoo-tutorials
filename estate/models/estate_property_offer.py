@@ -7,10 +7,6 @@ class EstatePropertyOffer(models.Model):
     _description = "Estate property offer."
     _order = "price desc"
 
-    _positive_offer_price = models.Constraint(
-        "CHECK(price > 0)", "Offer price must be strictly positive and greater than 0."
-    )
-
     price = fields.Float()
     status = fields.Selection(
         selection=[
@@ -24,6 +20,10 @@ class EstatePropertyOffer(models.Model):
     validity = fields.Integer(default=7, string="Validity (days)")
     property_type_id = fields.Many2one(related="property_id.property_type_id", store=True)
     date_deadline = fields.Date(compute="_compute_date_deadline", inverse="_inverse_date_deadline")
+
+    _positive_offer_price = models.Constraint(
+        "CHECK(price > 0)", "Offer price must be strictly positive and greater than 0."
+    )
 
     @api.depends("create_date", "validity")
     def _compute_date_deadline(self):
@@ -46,11 +46,10 @@ class EstatePropertyOffer(models.Model):
                 max_existing = max(prop.offer_ids.mapped("price"), default=0.0)
                 if vals.get("price", 0) < max_existing:
                     raise UserError(
-                        ("Offer amount cannot be lower than existing offer of $%(max)s.")
-                        % {"max": max_existing}
+                        ("Offer amount cannot be lower than existing offer of $%(max)s.") % {"max": max_existing}
                     )
                 property_id.state = "offer_received"
-                
+
         return super().create(vals_list)
 
     def action_accept(self):
@@ -69,7 +68,7 @@ class EstatePropertyOffer(models.Model):
             # Finally the changes to the record will be done if valitaions passed correctly
             record.property_id.write(
                 {
-                    "buyer": record.partner_id.id,
+                    "buyer_id": record.partner_id.id,
                     "selling_price": record.price,
                     "state": "offer_accepted",
                 }

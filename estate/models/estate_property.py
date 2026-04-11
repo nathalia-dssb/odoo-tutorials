@@ -8,11 +8,6 @@ class EstateProperty(models.Model):
     _description = "Estate property."
     _order = "id desc"
 
-    _positive_expected_price = models.Constraint(
-        "CHECK(expected_price > 0)", "Expected price must be strictly positive and greater than 0."
-    )
-    _positive_selling_price = models.Constraint("CHECK(selling_price >= 0)", "Selling price must be positive.")
-
     name = fields.Char(required=True, string="Title")
     description = fields.Text()
     postcode = fields.Char()
@@ -47,12 +42,17 @@ class EstateProperty(models.Model):
     )
     active = fields.Boolean(default=True)
     property_type_id = fields.Many2one("estate.property.type")
-    buyer = fields.Many2one("res.partner", copy=False)
-    salesperson = fields.Many2one("res.users", default=lambda self: self.env.uid)
+    buyer_id = fields.Many2one("res.partner", copy=False)
+    salesperson_id = fields.Many2one("res.users", default=lambda self: self.env.uid)
     tag_ids = fields.Many2many("estate.property.tag", string="Tags")
     offer_ids = fields.One2many("estate.property.offer", "property_id", string="Offers")
     total_area = fields.Integer(compute="_compute_total_area")
     best_price = fields.Float(compute="_compute_best_price", string="Best Offer")
+
+    _positive_expected_price = models.Constraint(
+        "CHECK(expected_price > 0)", "Expected price must be strictly positive and greater than 0."
+    )
+    _positive_selling_price = models.Constraint("CHECK(selling_price >= 0)", "Selling price must be positive.")
 
     @api.depends("garden_area", "living_area")
     def _compute_total_area(self):
@@ -76,7 +76,12 @@ class EstateProperty(models.Model):
     def _unlink_if_not_new_or_cancelled(self):
         for record in self:
             if record.state not in ["new", "cancelled"]:
-                raise UserError(("The property can only be deleted if it is 'cancelled' or 'new', current state is %(current_state)s")% {"current_state": record.state})
+                raise UserError(
+                    (
+                        "The property can only be deleted if it is 'cancelled' or 'new', current state is %(current_state)s"
+                    )
+                    % {"current_state": record.state}
+                )
 
     @api.onchange("garden")
     def _onchange_garden(self):
