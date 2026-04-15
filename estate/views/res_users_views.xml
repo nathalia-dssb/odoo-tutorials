@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="view_users_form" model="ir.ui.view">
         <field name="name">res.users.form.inherit.estate</field>
@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.view_users_form" />
         <field name="arch" type="xml">
             <xpath expr="//page[@name='preferences']" position="after">
-                <page string="Properties">
+                <page string="Properties" translate="True">
                     <field name="property_ids">
                         <list
                             decoration-success="state in ('offer_received', 'offer_accepted')"
@@ -16,7 +16,8 @@
                             <field name="name" />
                             <field name="property_type_id" />
                             <field name="postcode" />
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" />
+                            <field name="tag_ids" widget="many2many_tags"
+                                options="{'color_field': 'color'}" />
                             <field name="living_area" />
                             <field name="expected_price" />
                             <field name="selling_price" />

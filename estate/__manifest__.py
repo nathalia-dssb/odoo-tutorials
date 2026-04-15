@@ -20,7 +20,7 @@
         "report/estate_property_templates.xml",
         "report/estate_property_reports.xml",
         "data/estate.property.type.csv",
-        "demo/demo_data.xml",
+        "demo/demo_data.xml"
     ],
     "application": True,
 }

@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -43,10 +43,14 @@ class EstatePropertyOffer(models.Model):
             property_id = vals.get("property_id")
             if property_id:
                 prop = self.env["estate.property"].browse(property_id)
+
+                if prop.state == 'sold':
+                    raise UserError(self.env._("Cannot create offer on an already sold property."))
+                
                 max_existing = max(prop.offer_ids.mapped("price"), default=0.0)
                 if vals.get("price", 0) < max_existing:
                     raise UserError(
-                        ("Offer amount cannot be lower than existing offer of $%(max)s.") % {"max": max_existing}
+                        self.env._("Offer amount cannot be lower than existing offer of $%(max)s.") % {"max": max_existing}
                     )
                 prop.state = "offer_received"
 
@@ -59,7 +63,7 @@ class EstatePropertyOffer(models.Model):
             # and once it has been accepted, no other offers should be accepted
             accepted_offer = record.property_id.offer_ids.filtered(lambda o: o.status == "accepted")
             if accepted_offer:
-                raise UserError("An offer for this property has already been accepted.")
+                raise UserError(self.env._("An offer for this property has already been accepted."))
 
             # If an offer it's accepted, all others should be refused
             other_offers = record.property_id.offer_ids.filtered(lambda o: o.id != record.id)
@@ -78,5 +82,5 @@ class EstatePropertyOffer(models.Model):
     def action_refuse(self):
         for record in self:
             if record.status == "refused":
-                raise UserError("This offer is already refused.")
+                raise UserError(self.env._("This offer is already refused."))
             record.status = "refused"

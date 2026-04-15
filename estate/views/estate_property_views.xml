@@ -31,14 +31,14 @@
                 <header>
                     <button
                         name="action_sold"
-                        string="Sold"
+                        string="Sold" translate="True"
                         type="object"
                         class="btn-secondary"
                         invisible="state == 'offer_received' or state == 'sold'"
                     />
                     <button
                         name="action_cancel"
-                        string="Cancel"
+                        string="Cancel" translate="True"
                         type="object"
                         class="btn-secondary"
                         invisible="state == 'sold'"
@@ -71,7 +71,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Description">
+                        <page string="Description" translate="True">
                             <group>
                                 <field name="description" />
                                 <field name="bedrooms" />
@@ -84,7 +84,7 @@
                                 <field name="total_area" />
                             </group>
                         </page>
-                        <page string="Offers">
+                        <page string="Offers" translate="True">
                             <field name="offer_ids"
                                 readonly="state in ('offer_accepted', 'sold', 'cancelled')">
                                 <list
@@ -112,7 +112,7 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Other Info">
+                        <page string="Other Info" translate="True">
                             <group>
                                 <field name="salesperson_id" />
                                 <field name="buyer_id" />

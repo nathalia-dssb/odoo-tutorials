@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_is_zero
 
@@ -8,8 +8,8 @@ class EstateProperty(models.Model):
     _description = "Estate property."
     _order = "id desc"
 
-    name = fields.Char(required=True, string="Title")
-    description = fields.Text()
+    name = fields.Char(required=True, string="Title", translate=True)
+    description = fields.Text(translate=True)
     postcode = fields.Char()
     date_availability = fields.Date(
         copy=False,
@@ -76,14 +76,14 @@ class EstateProperty(models.Model):
             if float_is_zero(record.selling_price, precision_digits=2):
                 continue
             if float_compare(record.selling_price, record.expected_price * 0.9, precision_digits=2) < 0:
-                raise ValidationError("The selling price cannot be lower than 90% of the expected price.")
+                raise ValidationError(self.env._("The selling price cannot be lower than 90%% of the expected price."))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_not_new_or_cancelled(self):
         for record in self:
             if record.state not in ["new", "cancelled"]:
                 raise UserError(
-                    (
+                    self.env._(
                         "The property can only be deleted if it is 'cancelled' or 'new', current state is %(current_state)s"
                     )
                     % {"current_state": record.state}
@@ -101,14 +101,14 @@ class EstateProperty(models.Model):
     def action_cancel(self):
         for record in self:
             if record.state == "sold":
-                raise UserError("A sold property cannot be cancelled.")
+                raise UserError(self.env._("A sold property cannot be cancelled."))
             record.state = "cancelled"
 
     def action_sold(self):
         for record in self:
             if record.state == "cancelled":
-                raise UserError("A cancelled property cannot be set as sold.")
+                raise UserError(self.env._("A cancelled property cannot be set as sold."))
             accepted_offer = record.offer_ids.filtered(lambda o: o.status == "accepted")
             if not accepted_offer:
-                raise UserError("Cannot sell a property without an accepted offer.")
+                raise UserError(self.env._("Cannot sell a property without an accepted offer."))
             record.state = "sold"

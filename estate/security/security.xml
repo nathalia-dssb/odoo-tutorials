@@ -24,8 +24,8 @@
         <field name="perm_create" eval="True" />
         <field name="perm_unlink" eval="True" />
         <field name="groups" eval="[Command.link(ref('estate_group_user'))]" />
-        <field name="domain_force">[ '|', ('salesperson', '=', user.id), ('salesperson', '=', False)
-            ]</field>
+        <field name="domain_force">[ '|', ('salesperson_id', '=', user.id), ('salesperson_id', '=',
+            False) ]</field>
     </record>
 
     <record id="estate_property_rule_manager" model="ir.rule">

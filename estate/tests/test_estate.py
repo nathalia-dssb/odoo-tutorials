@@ -14,21 +14,21 @@ class EstateTestCase(TransactionCase):
         cls.Offer = cls.env["estate.property.offer"]
         cls.Partner = cls.env["res.partner"]
 
-        cls.property_new = cls.Property.create(
+        cls.property_new = cls.Property.with_context(lang="en_US").create(
             {
                 "name": "New House",
                 "expected_price": 200000,
                 "state": "new",
             }
         )
-        cls.property_offer_accepted = cls.Property.create(
+        cls.property_offer_accepted = cls.Property.with_context(lang="en_US").create(
             {
                 "name": "House With Accepted Offer",
                 "expected_price": 300000,
                 "state": "offer_accepted",
             }
         )
-        cls.property_sold = cls.Property.create(
+        cls.property_sold = cls.Property.with_context(lang="en_US").create(
             {
                 "name": "Sold House",
                 "expected_price": 250000,

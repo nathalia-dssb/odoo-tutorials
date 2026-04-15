@@ -5,10 +5,10 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Partner</th>
-                        <th>Price</th>
-                        <th>Status</th>
-                        <th>Deadline</th>
+                        <th><t t-esc="_t('Partner')"/></th>
+                        <th><t t-esc="_t('Price')"/></th>
+                        <th><t t-esc="_t('Status')"/></th>
+                        <th><t t-esc="_t('Deadline')"/></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,7 +30,7 @@
             </table>
         </t>
         <t t-else="">
-            <p>There are no offers for this property yet.</p>
+            <p><t t-esc="_t('There are no offers for this property yet.')"/></p>
         </t>
     </template>
 </odoo>
