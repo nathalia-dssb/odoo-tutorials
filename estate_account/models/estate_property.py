@@ -1,4 +1,5 @@
 from odoo import models
+from odoo.exceptions import ValidationError
 from odoo.fields import Command
 
 
@@ -12,6 +13,9 @@ class EstateProperty(models.Model):
             [("type", "=", "sale")],
             limit=1,
         )
+
+        if not journal:
+            raise ValidationError("Sales journal wasn't found.")
 
         for prop in self:
             self.env["account.move"].create(

@@ -48,7 +48,7 @@ class EstatePropertyOffer(models.Model):
                     raise UserError(
                         ("Offer amount cannot be lower than existing offer of $%(max)s.") % {"max": max_existing}
                     )
-                property_id.state = "offer_received"
+                prop.state = "offer_received"
 
         return super().create(vals_list)
 
