@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="portal_my_home_extended"
+        inherit_id="portal.portal_my_home"
+        name="My Portal Extended">
+
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="attributes">
+            <attribute name="t-att-style">'display:none'</attribute>
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <select class="form-select w-auto m-3">
+                <t t-foreach="my_values" t-as="item" t-key="item['value']">
+                    <option t-att-value="item['value']"
+                        t-esc="item['label']" />
+                </t>
+            </select>
+
+            <div class="p-3">
+                <input type="text" class="form-control" placeholder="Test input" />
+            </div>
+
+            <div class="row g-3">
+                <div class="col-12 col-md-12 col-lg-4 col-xl-6 col-xxl-4">
+                    <div class="border p-5 text-center">Column</div>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-4 col-xl-6 col-xxl-4">
+                    <div class="border p-5 text-center">Column</div>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-4 col-xl-4 col-xl-offset-4 col-xxl-4">
+                    <div class="border p-5 text-center">Column</div>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
+                    <div class="border p-5 text-center">Column</div>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
+                    <div class="border p-5 text-center">Column</div>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
+                    <div class="border p-5 text-center">Column</div>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
+                    <div class="border p-5 text-center">Column</div>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
+                    <div class="border p-5 text-center">Column</div>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
+                    <div class="border p-5 text-center">Column</div>
+                </div>
+            </div>
+        </xpath>
+
+    </template>
+</odoo>

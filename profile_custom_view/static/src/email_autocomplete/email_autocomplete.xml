@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="profile_custom_view.EmailAutocomplete">
+        <ul class="list-unstyled border rounded shadow-sm position-absolute bg-white"
+            t-if="props.suggestions.length > 0">
+            <t t-foreach="props.suggestions" t-as="suggestion" t-key="suggestion">
+                <li class="px-3 py-2"
+                    t-on-click="() => props.onSelect(suggestion)"
+                    t-esc="suggestion"/>
+            </t>
+        </ul>
+    </t>
+
+    <t t-name="profile_custom_view.EmailWidget">
+        <div class="position-relative">
+            <input type="text"
+                   class="form-control"
+                   placeholder="Email"
+                   t-on-input="onInput"
+                   t-ref="emailInput"/>
+            <EmailAutocomplete
+                suggestions="state.suggestions"
+                onSelect.bind="onSelect"/>
+        </div>
+    </t>
+
+</templates>
